@@ -1,0 +1,55 @@
+[tool.poetry]
+name = "fastzero"
+version = "0.1.0"
+description = ""
+authors = ["Eduardo Gomes <edu_merckx@yahoo.com.br>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "3.12.*"
+fastapi = {extras = ["standard"], version = "^0.115.0"}
+sqlalchemy = "^2.0.35"
+pydantic-settings = "^2.5.2"
+alembic = "^1.13.3"
+pyjwt = "^2.9.0"
+pwdlib = {extras = ["argon2"], version = "^0.2.1"}
+psycopg = {extras = ["binary"], version = "^3.2.3"}
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.3"
+pytest-cov = "^5.0.0"
+taskipy = "^1.13.0"
+ruff = "^0.6.8"
+httpx = "^0.27.2"
+factory-boy = "^3.3.1"
+freezegun = "^1.5.1"
+testcontainers = "^4.8.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 80
+extend-exclude = ['migrations']
+
+[tool.ruff.lint]
+preview = true
+select = ['I', 'F', 'E', 'W', 'PL', 'PT']
+
+[tool.ruff.format]
+preview = true
+quote-style = 'single'
+
+[tool.pytest.ini_options]
+pythonpath = '.'
+addopts = '-p no:warnings'
+
+[tool.taskipy.tasks]
+lint = 'ruff check .; ruff check . --diff'
+format = 'ruff check . --fix; ruff format .'
+run = 'fastapi dev fastzero/app.py'
+pre_test = 'task lint'
+test = 'pytest -s -x --cov=fastzero -vv'
+post_test = 'coverage html'
