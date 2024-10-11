@@ -1,0 +1,22 @@
+name: Pipeline
+
+on: [push]
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+        steps:
+            - name: instalar python
+              uses: actions/setup-python@v5
+              with:
+                python-version: '3.12'
+            
+            - name: instalar poetry
+              run: pip install poetry
+
+            - name: instalar dependências
+              run: poetry install
+
+            - name: executar testes
+              run: poetry run task test
+
